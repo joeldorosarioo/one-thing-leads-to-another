@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.1
+
+- Fixed clean dependency installation in CI and release workflows by allowing the esbuild installation script.
+- Added the repository name explanation and its musical reference to the README.
+
 ## 0.5.0 (release candidate)
 
 - Migrated the source to TypeScript, grouped modules by product capability and enabled strict type checking for domain and application code.

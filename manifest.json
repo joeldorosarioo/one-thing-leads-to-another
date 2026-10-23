@@ -1,7 +1,7 @@
 {
   "id": "note-template-sync",
   "name": "Note Template Sync",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "minAppVersion": "1.5.0",
   "description": "Edit structured data visually and generate Markdown notes from reusable templates.",
   "author": "Joel Oliveira",

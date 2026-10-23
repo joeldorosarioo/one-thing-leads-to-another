@@ -51,11 +51,11 @@ Add dependencies only when they solve a clear need. Keep private vault data, fin
 
 1. Review the author and version in `manifest.json`, along with `LICENSE`, `README.md` and the example data. The release tag must match the version in both `manifest.json` and `package.json`.
 2. Confirm that `pnpm run check` and CI pass. Test in a disposable Obsidian vault, including an upgrade from v0.4.x and a generated note with manual edits.
-3. Tag and push the release. For version 0.5.0:
+3. Tag and push the release. For version 0.5.1:
 
 ```sh
-git tag 0.5.0
-git push origin 0.5.0
+git tag 0.5.1
+git push origin 0.5.1
 ```
 
 GitHub Actions creates a draft release containing `main.js`, `manifest.json` and `styles.css`. Inspect and test those files, then publish the release so Obsidian can download it.
