@@ -26,15 +26,15 @@ function blankDocument(): PortableDocument {
 }
 
 function documentValues(document: PortableDocument): Record<string, FieldValue> {
-  const fieldValues: Record<string, FieldValue> = Object.create(null);
-  const numericValues: Record<string, number> = Object.create(null);
+  const fieldValues = Object.create(null) as Record<string, FieldValue>;
+  const numericValues = Object.create(null) as Record<string, number>;
 
   for (const field of document.fields) {
     fieldValues[field.key] = field.value;
     if (typeof field.value === 'number') numericValues[field.key] = field.value;
   }
 
-  const expressions: Record<string, string> = Object.create(null);
+  const expressions = Object.create(null) as Record<string, string>;
   for (const formula of document.formulas) expressions[formula.key] = formula.expression;
   return { ...fieldValues, ...computeValues(numericValues, expressions) };
 }

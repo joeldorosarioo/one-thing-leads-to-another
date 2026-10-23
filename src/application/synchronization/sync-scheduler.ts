@@ -3,12 +3,12 @@ export function createSyncScheduler(options: {
   run(id: string): Promise<unknown>;
   delay?: number;
 }) {
-  const timers = new Map<string, ReturnType<typeof setTimeout>>();
+  const timers = new Map<string, number>();
   let disposed = false;
 
   function cancel(id: string): void {
     const timer = timers.get(id);
-    if (timer) clearTimeout(timer);
+    if (timer !== undefined) window.clearTimeout(timer);
     timers.delete(id);
   }
 
@@ -18,7 +18,7 @@ export function createSyncScheduler(options: {
 
     timers.set(
       id,
-      setTimeout(() => {
+      window.setTimeout(() => {
         timers.delete(id);
         if (!disposed && options.isEnabled(id)) void options.run(id);
       }, options.delay ?? 500)

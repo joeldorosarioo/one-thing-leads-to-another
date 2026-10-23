@@ -2,6 +2,48 @@ import { describe, expect, it } from 'vitest';
 import { createActions } from '../helpers/plugin-actions';
 
 describe('plugin application actions', () => {
+  it('rejects connections inside the configured vault settings folder before creating files', async () => {
+    const { actions, vault, files } = createActions();
+    Object.assign(vault, { configDir: 'config/private' });
+    const original = [...files];
+
+    await expect(
+      actions.saveConnection(
+        {
+          id: 'unsafe',
+          title: 'Unsafe',
+          enabled: false,
+          data_path: 'config/private/data.json',
+          template_path: 'template.md',
+          output_path: 'unsafe.md'
+        },
+        { create: true }
+      )
+    ).rejects.toThrow(/configuration folder/);
+
+    expect([...files]).toEqual(original);
+    expect(actions.listConnections()).toHaveLength(1);
+    actions.dispose();
+  });
+
+  it('allows an ordinary folder named .obsidian when the vault uses another config folder', async () => {
+    const { actions, vault, files } = createActions();
+    Object.assign(vault, { configDir: 'config/private' });
+    await actions.saveConnection(
+      {
+        id: 'ordinary',
+        title: 'Ordinary',
+        enabled: false,
+        data_path: '.obsidian/data.json',
+        template_path: 'template.md',
+        output_path: 'ordinary.md'
+      },
+      { create: true }
+    );
+    expect(files.has('.obsidian/data.json')).toBe(true);
+    actions.dispose();
+  });
+
   it('does not rewrite the source when saving unchanged regional settings', async () => {
     const { actions, files } = createActions();
     const original = files.get('data.json');

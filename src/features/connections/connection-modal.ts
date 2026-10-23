@@ -75,7 +75,7 @@ export function createConnectionModal(
 
   async function submit(): Promise<void> {
     try {
-      validateConnection(connection);
+      validateConnection(connection, app.vault.configDir);
 
       if (!connection.title.trim()) throw new Error('Connection name is required.');
       actions.validateConnection(connection);

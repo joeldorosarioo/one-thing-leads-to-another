@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.2
+
+- Fixed sidebar and confirmation-button API compatibility while keeping support for Obsidian 1.5.0.
+- Added searchable connection settings for Obsidian 1.13.0 and later, with the existing settings screen retained for older versions.
+- Respected the vault's configured settings folder when validating connection paths.
+- Fixed callback typing, window timers, typed value maps and DOM helper usage reported during plugin review.
+- Added Obsidian API lint checks and regression coverage for compatibility, settings controls and custom configuration folders.
+
 ## 0.5.1
 
 - Fixed clean dependency installation in CI and release workflows by allowing the esbuild installation script.

@@ -2,7 +2,7 @@
 
 Edit structured data in Obsidian's right sidebar and generate a Markdown note from a reusable template. Each connection links a JSON data source, a Markdown template and a generated note. The files stay in your vault, and the generated note contains ordinary Markdown. No accounts or external services are required.
 
-**Version:** 0.5.1 | **Status:** release candidate, not yet community-approved | **Platform:** desktop preview.
+**Version:** 0.5.2 | **Status:** release candidate, not yet community-approved | **Platform:** desktop preview.
 
 ## Why this exists
 

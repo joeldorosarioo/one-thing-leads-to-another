@@ -7,8 +7,8 @@ export function createConnectionFields(options: {
   app: App;
   connection: DocumentConnection;
   existing: DocumentConnection | null;
-  rerender(): Promise<void>;
-  onDataSourceChange(): void;
+  rerender: () => Promise<void>;
+  onDataSourceChange: () => void;
 }) {
   const { app, connection, existing, rerender, onDataSourceChange } = options;
 

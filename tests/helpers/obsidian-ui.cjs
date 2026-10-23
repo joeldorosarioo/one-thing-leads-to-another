@@ -79,7 +79,10 @@ function createUiHarness({ modernButtons = true } = {}) {
       return row;
     };
 
-    row.setDesc = () => row;
+    row.setDesc = description => {
+      row.description = description;
+      return row;
+    };
 
     for (const [method, kind] of Object.entries({
       addText: 'text',
@@ -134,8 +137,25 @@ function createUiHarness({ modernButtons = true } = {}) {
   FuzzySuggestModal.prototype.setPlaceholder = function () {};
   FuzzySuggestModal.prototype.open = function () {};
 
-  const load = createBuiltModuleLoader({ Modal, Setting, Notice, TFile, FuzzySuggestModal });
-  return { load, rows, buttons, modals, notices, events, TFile, createElement: createUiElement };
+  const load = createBuiltModuleLoader({
+    Modal,
+    Setting,
+    Notice,
+    TFile,
+    FuzzySuggestModal,
+    requireApiVersion: () => modernButtons
+  });
+  return {
+    load,
+    rows,
+    buttons,
+    modals,
+    notices,
+    events,
+    TFile,
+    createElement: createUiElement,
+    createSetting: Setting
+  };
 }
 
 module.exports = { createUiHarness };

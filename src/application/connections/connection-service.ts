@@ -16,7 +16,7 @@ export interface ConnectionDependencies {
   settings: PluginSettings;
   vault: VaultPort;
   documents: DocumentService;
-  saveSettings(settings: PluginSettings): Promise<void>;
+  saveSettings: (settings: PluginSettings) => Promise<void>;
 }
 
 export function createConnectionService(dependencies: ConnectionDependencies) {
@@ -48,7 +48,7 @@ export function createConnectionService(dependencies: ConnectionDependencies) {
   }
 
   function validate(connection: DocumentConnection): void {
-    validateConnection(connection);
+    validateConnection(connection, vault.configDir);
 
     if (!connection.title.trim()) throw new Error('Connection name is required.');
 

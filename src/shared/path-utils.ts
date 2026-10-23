@@ -1,4 +1,4 @@
-export function normalizePath(input: string): string {
+export function normalizePath(input: string, configDir?: string): string {
   if (typeof input !== 'string') throw new Error('File path is required.');
   const path = input.trim().replace(/\\/g, '/').replace(/\/+/g, '/');
 
@@ -10,8 +10,8 @@ export function normalizePath(input: string): string {
     throw new Error('Path traversal is not allowed.');
   }
 
-  if (path.split('/')[0] === '.obsidian') {
-    throw new Error('Do not store document files in the .obsidian configuration folder.');
+  if (configDir && (path === configDir || path.startsWith(configDir + '/'))) {
+    throw new Error('Do not store document files in the vault configuration folder.');
   }
 
   return path;

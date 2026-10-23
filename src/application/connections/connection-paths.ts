@@ -6,8 +6,9 @@ export interface ConnectionPaths {
   output_path: string;
 }
 
-export function validateConnection<T extends ConnectionPaths>(job: T): T {
-  for (const key of ['data_path', 'template_path', 'output_path'] as const) job[key] = normalizePath(job[key]);
+export function validateConnection<T extends ConnectionPaths>(job: T, configDir?: string): T {
+  for (const key of ['data_path', 'template_path', 'output_path'] as const)
+    job[key] = normalizePath(job[key], configDir);
 
   if (!job.data_path.toLowerCase().endsWith('.json')) throw new Error('Data source must be a .json file.');
 

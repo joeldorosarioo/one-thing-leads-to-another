@@ -13,7 +13,7 @@ function currencyCodes(): string[] {
 
   try {
     available = Intl.supportedValuesOf('currency');
-  } catch (_) {
+  } catch {
     available = FALLBACK_CURRENCIES;
   }
 
@@ -33,7 +33,9 @@ function currencyLabel(code: string): string {
 
     const name = names.of(code);
     if (name && name !== code) return `${name} (${code})`;
-  } catch (_) {}
+  } catch {
+    return code;
+  }
 
   return code;
 }

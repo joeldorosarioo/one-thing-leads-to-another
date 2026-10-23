@@ -5,7 +5,7 @@ import type { DocumentService, FieldChange, FieldSelection } from './document-se
 export function createDocumentActions(dependencies: {
   documents: DocumentService;
   connections: ConnectionService;
-  changed(id: string, structureChanged?: boolean): Promise<void>;
+  changed: (id: string, structureChanged?: boolean) => Promise<void>;
 }) {
   const { documents, connections, changed } = dependencies;
 

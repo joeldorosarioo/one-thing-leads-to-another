@@ -5,9 +5,9 @@ import { errorMessage } from '../../shared/error-message';
 export function createSyncAction(dependencies: {
   synchronization: ReturnType<typeof createSyncService>;
   connections: ConnectionService;
-  isActive(): boolean;
-  notify(message: string, duration?: number): void;
-  refreshSync(id: string): Promise<void>;
+  isActive: () => boolean;
+  notify: (message: string, duration?: number) => void;
+  refreshSync: (id: string) => Promise<void>;
 }) {
   const { synchronization, connections, isActive, notify, refreshSync } = dependencies;
 

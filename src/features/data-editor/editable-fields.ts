@@ -53,9 +53,9 @@ function filterFieldGroups(page: HTMLElement, search: string): void {
 export function createEditableFields(options: {
   app: App;
   actions: Pick<EditorActions, 'updateValue' | 'saveField'>;
-  onValueSaved(connectionId: string): Promise<void>;
-  onSaveFailed(): Promise<void>;
-  onDelete(connectionId: string, key: string): void;
+  onValueSaved: (connectionId: string) => Promise<void>;
+  onSaveFailed: () => Promise<void>;
+  onDelete: (connectionId: string, key: string) => void;
 }) {
   const { app, actions, onValueSaved, onSaveFailed, onDelete } = options;
 

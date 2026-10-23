@@ -11,10 +11,10 @@ import { createSyncService } from './synchronization/sync-service';
 export function createPluginActions(dependencies: {
   vault: VaultPort;
   savedSettings: unknown;
-  saveSettings(settings: PluginSettings): Promise<void>;
-  notify(message: string, duration?: number): void;
-  refreshEditors(): Promise<void>;
-  refreshSync(id: string): Promise<void>;
+  saveSettings: (settings: PluginSettings) => Promise<void>;
+  notify: (message: string, duration?: number) => void;
+  refreshEditors: () => Promise<void>;
+  refreshSync: (id: string) => Promise<void>;
 }) {
   const documents = createDocumentService(dependencies.vault);
 

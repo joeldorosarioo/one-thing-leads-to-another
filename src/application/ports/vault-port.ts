@@ -4,6 +4,7 @@ export interface VaultFile {
 }
 
 export interface VaultPort {
+  readonly configDir: string;
   getAbstractFileByPath(path: string): VaultFile | null;
   read(file: VaultFile): Promise<string>;
   modify(file: VaultFile, content: string): Promise<void>;

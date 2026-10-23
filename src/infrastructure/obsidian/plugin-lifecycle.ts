@@ -1,7 +1,7 @@
-import { Notice, PluginSettingTab, type Plugin } from 'obsidian';
+import { Notice, PluginSettingTab, requireApiVersion, type Plugin, type SettingDefinitionItem } from 'obsidian';
 import type { PluginActions } from '../../application/plugin-actions';
 import { createConnectionModal } from '../../features/connections/connection-modal';
-import { renderConnectionSettings } from '../../features/connections/settings-tab';
+import { getConnectionSettingDefinitions, renderConnectionSettings } from '../../features/connections/settings-tab';
 import { createDataEditorView, VIEW_TYPE } from './data-editor-view';
 import type { createEditorWorkspace } from './editor-workspace';
 
@@ -35,6 +35,13 @@ export function registerPlugin(
 
   plugin.addSettingTab(
     new (class extends PluginSettingTab {
+      getSettingDefinitions(): SettingDefinitionItem[] {
+        return getConnectionSettingDefinitions(app, actions, () => {
+          if (requireApiVersion('1.13.0')) this.update();
+          else this.display();
+        });
+      }
+
       display(): void {
         renderConnectionSettings(this.containerEl, app, actions);
       }

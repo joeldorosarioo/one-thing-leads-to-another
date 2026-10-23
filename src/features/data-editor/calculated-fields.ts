@@ -7,7 +7,7 @@ import { createFieldModal } from './field-modal';
 export function createCalculatedFields(options: {
   app: App;
   actions: Pick<EditorActions, 'saveField'>;
-  onDelete(connectionId: string, key: string): void;
+  onDelete: (connectionId: string, key: string) => void;
 }) {
   const { app, actions, onDelete } = options;
 

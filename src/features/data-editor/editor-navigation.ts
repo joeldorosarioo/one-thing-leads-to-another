@@ -6,9 +6,9 @@ import { createConnectionModal } from '../connections/connection-modal';
 export function createEditorNavigation(options: {
   app: App;
   actions: EditorActions;
-  close(): void;
-  selectConnection(id: string): Promise<void>;
-  syncConnection(connection: DocumentConnection): Promise<void>;
+  close: () => void;
+  selectConnection: (id: string) => Promise<void>;
+  syncConnection: (connection: DocumentConnection) => Promise<void>;
 }) {
   const { app, actions, close, selectConnection, syncConnection } = options;
 
@@ -83,7 +83,7 @@ export function createEditorNavigation(options: {
       cls: 'nts-report-actions'
     });
 
-    const syncStatusEl = reportActions.createEl('span', {
+    const syncStatusEl = reportActions.createSpan({
       cls: 'nts-sync-status',
       text: 'Checking report…'
     });

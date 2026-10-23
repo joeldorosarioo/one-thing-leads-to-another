@@ -1,7 +1,11 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createSyncScheduler } from '../../src/application/synchronization/sync-scheduler';
 
-afterEach(() => vi.useRealTimers());
+beforeEach(() => vi.stubGlobal('window', globalThis));
+afterEach(() => {
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
+});
 
 describe('automatic synchronization scheduling', () => {
   it('coalesces repeated changes and waits until editing has paused', async () => {

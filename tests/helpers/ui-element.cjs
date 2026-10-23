@@ -20,6 +20,10 @@ function createUiElement(tag = 'div', options = {}) {
       return element.createEl('div', childOptions);
     },
 
+    createSpan(childOptions) {
+      return element.createEl('span', childOptions);
+    },
+
     empty() {
       element.children.length = 0;
     },

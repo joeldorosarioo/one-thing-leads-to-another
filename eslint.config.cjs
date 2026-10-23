@@ -2,6 +2,7 @@ const { defineConfig } = require('eslint/config');
 
 const js = require('@eslint/js');
 const tseslint = require('typescript-eslint');
+const obsidianmd = require('eslint-plugin-obsidianmd').default;
 
 const safetyRules = {
   'no-eval': 'error',
@@ -93,6 +94,25 @@ module.exports = defineConfig(
           format: ['PascalCase']
         }
       ]
+    }
+  },
+  {
+    files: ['src/**/*.ts'],
+    plugins: { obsidianmd },
+    languageOptions: {
+      parserOptions: { project: './tsconfig.json', tsconfigRootDir: __dirname }
+    },
+    rules: {
+      'no-empty': 'error',
+      '@typescript-eslint/unbound-method': 'error',
+      '@typescript-eslint/no-unsafe-assignment': 'error',
+      '@typescript-eslint/no-misused-promises': 'error',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', caughtErrors: 'all' }],
+      'obsidianmd/no-unsupported-api': 'error',
+      'obsidianmd/prefer-window-timers': 'error',
+      'obsidianmd/prefer-create-el': 'error',
+      'obsidianmd/hardcoded-config-path': 'error',
+      'obsidianmd/settings-tab/prefer-setting-definitions': 'error'
     }
   },
   {

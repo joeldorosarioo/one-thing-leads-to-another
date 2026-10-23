@@ -1,14 +1,23 @@
-import { Notice, type App } from 'obsidian';
+import { Notice, requireApiVersion, type App, type WorkspaceLeaf } from 'obsidian';
 import { VIEW_TYPE, type DataEditorHost } from './data-editor-view';
 
 export function createEditorWorkspace(app: App) {
   const views = () => app.workspace.getLeavesOfType(VIEW_TYPE).map(leaf => leaf.view as DataEditorHost);
 
+  async function reveal(leaf: WorkspaceLeaf): Promise<void> {
+    if (requireApiVersion('1.7.2')) {
+      await app.workspace.revealLeaf(leaf);
+    } else {
+      app.workspace.rightSplit.expand();
+      app.workspace.setActiveLeaf(leaf, { focus: true });
+    }
+  }
+
   async function open(): Promise<void> {
     const existing = app.workspace.getLeavesOfType(VIEW_TYPE)[0];
 
     if (existing) {
-      await app.workspace.revealLeaf(existing);
+      await reveal(existing);
       return;
     }
 
@@ -20,7 +29,7 @@ export function createEditorWorkspace(app: App) {
     }
 
     await leaf.setViewState({ type: VIEW_TYPE, active: true });
-    await app.workspace.revealLeaf(leaf);
+    await reveal(leaf);
   }
 
   function close(): void {

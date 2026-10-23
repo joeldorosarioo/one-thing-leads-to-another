@@ -1,4 +1,4 @@
-import { Modal, Notice, Setting, type App } from 'obsidian';
+import { Modal, Notice, requireApiVersion, Setting, type App } from 'obsidian';
 import { errorMessage } from '../../../shared/error-message';
 
 export function createConfirmModal(
@@ -23,7 +23,7 @@ export function createConfirmModal(
       .addButton(button => {
         button.setButtonText(confirmText);
 
-        if (typeof button.setDestructive === 'function') {
+        if (requireApiVersion('1.13.0')) {
           button.setDestructive().setCta();
         } else {
           button.buttonEl.addClass('mod-warning');

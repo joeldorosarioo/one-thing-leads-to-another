@@ -82,7 +82,9 @@ export function createFieldModal(
       );
 
       new Setting(modal.contentEl).setName('Type').addDropdown(dropdown => {
-        ['number', 'text', 'date', 'boolean'].forEach(item => dropdown.addOption(item, item));
+        ['number', 'text', 'date', 'boolean'].forEach(item => {
+          dropdown.addOption(item, item);
+        });
 
         dropdown
           .setValue(draft.type)
@@ -104,7 +106,9 @@ export function createFieldModal(
       );
 
     new Setting(modal.contentEl).setName('Color role').addDropdown(dropdown => {
-      ['none', 'income', 'expense', 'investment', 'pending', 'auto'].forEach(item => dropdown.addOption(item, item));
+      ['none', 'income', 'expense', 'investment', 'pending', 'auto'].forEach(item => {
+        dropdown.addOption(item, item);
+      });
 
       dropdown.setValue(draft.tone || 'none').onChange(value => {
         if (isColorRole(value)) draft.tone = value;

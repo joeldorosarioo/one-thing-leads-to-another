@@ -32,7 +32,7 @@ export function createRegionalSettings(app: App, readFormats: ConnectionActions[
       cls: 'nts-format-preview'
     });
 
-    preview.createEl('span', {
+    preview.createSpan({
       text: 'Formatting preview',
       cls: 'nts-preview-label'
     });
@@ -119,7 +119,7 @@ export function createRegionalSettings(app: App, readFormats: ConnectionActions[
 
     try {
       state.previewEl.setText(previewFormat(getFormats().locale, getFormats().currency));
-    } catch (_) {
+    } catch {
       state.previewEl.setText('Invalid locale or currency');
     }
   }
@@ -132,7 +132,7 @@ export function createRegionalSettings(app: App, readFormats: ConnectionActions[
       state.formatDraft ??= await readFormats(path);
     },
 
-    reset() {
+    reset: () => {
       state.formatDraft = null;
     },
 

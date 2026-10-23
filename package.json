@@ -1,6 +1,6 @@
 {
   "name": "note-template-sync",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "private": true,
   "description": "Visual data editor and portable Markdown template generation for Obsidian",
   "license": "MIT",
@@ -17,13 +17,14 @@
     "format:check": "prettier --check ."
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.0",
     "@types/node": "^22.0.0",
-    "obsidian": "latest",
-    "typescript": "^5.8.0",
-    "vitest": "^3.2.0",
     "eslint": "^9.0.0",
+    "eslint-plugin-obsidianmd": "^0.4.2",
+    "obsidian": "latest",
     "prettier": "^3.0.0",
+    "typescript": "^5.8.0",
     "typescript-eslint": "^8.59.0",
-    "@eslint/js": "^9.39.0"
+    "vitest": "^3.2.0"
   }
 }

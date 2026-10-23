@@ -80,7 +80,7 @@ export function readDocument(input: unknown): PortableDocument {
 
   try {
     new Intl.NumberFormat(input.locale, { style: 'currency', currency: input.currency });
-  } catch (_) {
+  } catch {
     throw new Error('Invalid locale or currency code.');
   }
 

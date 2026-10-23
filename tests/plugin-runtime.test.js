@@ -2,6 +2,62 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { createPlugin, createVault, readExample, TFile, notices } = require('./helpers/plugin-runtime.cjs');
 
+for (const existing of [false, true]) {
+  test(`Obsidian 1.5 opens and focuses the ${existing ? 'existing' : 'new'} sidebar editor`, async () => {
+    let expanded = false;
+    let active = null;
+    const leaf = { async setViewState() {} };
+    const plugin = createPlugin({
+      vault: createVault({}),
+      apiVersion: '1.5.0',
+      workspace: {
+        getLeavesOfType: () => (existing ? [leaf] : []),
+        getRightLeaf: () => leaf,
+        rightSplit: {
+          expand() {
+            expanded = true;
+          }
+        },
+        setActiveLeaf(value, options) {
+          active = { value, options };
+        }
+      }
+    });
+    await plugin.onload();
+    await plugin.editor.open();
+    assert.equal(expanded, true);
+    assert.equal(active.value, leaf);
+    assert.equal(active.options.focus, true);
+    plugin.onunload();
+  });
+}
+
+test('registered settings expose connection names and automatic updates to modern settings search', async () => {
+  const plugin = createPlugin({ vault: createVault({}) });
+  plugin.data = {
+    jobs: [
+      {
+        id: 'searchable',
+        title: 'Project report',
+        enabled: false,
+        data_path: 'data.json',
+        template_path: 'template.md',
+        output_path: 'report.md'
+      }
+    ]
+  };
+  await plugin.onload();
+  assert.equal(typeof plugin.settingTab.getSettingDefinitions, 'function');
+  const definitions = plugin.settingTab.getSettingDefinitions();
+  assert.ok(definitions.some(item => item.name === 'Document connections'));
+  const connection = definitions.find(item => item.name === 'Project report');
+  assert.ok(connection);
+  assert.ok(connection.aliases.includes('Automatic updates'));
+  assert.equal(typeof connection.render, 'function');
+  assert.equal(typeof plugin.settingTab.display, 'function');
+  plugin.onunload();
+});
+
 test('invalid saved connections are rejected without replacing saved settings', async () => {
   const plugin = createPlugin({
     vault: createVault({})

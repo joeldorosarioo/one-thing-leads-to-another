@@ -39,9 +39,9 @@ module.exports = (function loadPlugin(modules) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateConnection = validateConnection;
 const path_utils_1 = require("../../shared/path-utils");
-function validateConnection(job) {
+function validateConnection(job, configDir) {
     for (const key of ['data_path', 'template_path', 'output_path'])
-        job[key] = (0, path_utils_1.normalizePath)(job[key]);
+        job[key] = (0, path_utils_1.normalizePath)(job[key], configDir);
     if (!job.data_path.toLowerCase().endsWith('.json'))
         throw new Error('Data source must be a .json file.');
     if (!job.template_path.toLowerCase().endsWith('.md') || !job.output_path.toLowerCase().endsWith('.md')) {
@@ -86,7 +86,7 @@ function createConnectionService(dependencies) {
         return persistence;
     }
     function validate(connection) {
-        (0, connection_paths_1.validateConnection)(connection);
+        (0, connection_paths_1.validateConnection)(connection, vault.configDir);
         if (!connection.title.trim())
             throw new Error('Connection name is required.');
         for (const other of list()) {
@@ -394,7 +394,7 @@ async function ensureFolders(vault, path) {
     }
 }
 async function createStarterFiles(vault, connection) {
-    (0, connection_paths_1.validateConnection)(connection);
+    (0, connection_paths_1.validateConnection)(connection, vault.configDir);
     if (!vault.getAbstractFileByPath(connection.data_path)) {
         await ensureFolders(vault, connection.data_path);
         await vault.create(connection.data_path, JSON.stringify((0, data_model_1.blankDocument)(), null, 2) + '\n');
@@ -405,7 +405,7 @@ async function createStarterFiles(vault, connection) {
     }
 }
 async function inspectDocument(vault, connection) {
-    (0, connection_paths_1.validateConnection)(connection);
+    (0, connection_paths_1.validateConnection)(connection, vault.configDir);
     const source = vault.getAbstractFileByPath(connection.data_path);
     const template = vault.getAbstractFileByPath(connection.template_path);
     if (!(0, vault_port_1.isVaultFile)(source) || !(0, vault_port_1.isVaultFile)(template)) {
@@ -616,15 +616,15 @@ function createSyncScheduler(options) {
     let disposed = false;
     function cancel(id) {
         const timer = timers.get(id);
-        if (timer)
-            clearTimeout(timer);
+        if (timer !== undefined)
+            window.clearTimeout(timer);
         timers.delete(id);
     }
     function schedule(id) {
         cancel(id);
         if (disposed || !options.isEnabled(id))
             return;
-        timers.set(id, setTimeout(() => {
+        timers.set(id, window.setTimeout(() => {
             timers.delete(id);
             if (!disposed && options.isEnabled(id))
                 void options.run(id);
@@ -854,7 +854,7 @@ function readDocument(input) {
     try {
         new Intl.NumberFormat(input.locale, { style: 'currency', currency: input.currency });
     }
-    catch (_) {
+    catch {
         throw new Error('Invalid locale or currency code.');
     }
     const usedKeys = new Set();
@@ -1088,7 +1088,7 @@ function currencyCodes() {
     try {
         available = Intl.supportedValuesOf('currency');
     }
-    catch (_) {
+    catch {
         available = formatting_options_data_1.FALLBACK_CURRENCIES;
     }
     const currencies = new Set([...available, ...formatting_options_data_1.FALLBACK_CURRENCIES]);
@@ -1106,7 +1106,9 @@ function currencyLabel(code) {
         if (name && name !== code)
             return `${name} (${code})`;
     }
-    catch (_) { }
+    catch {
+        return code;
+    }
     return code;
 }
 function availableLocales(current) {
@@ -1478,7 +1480,7 @@ function createConnectionModal(app, actions, existing = null) {
     }
     async function submit() {
         try {
-            (0, connection_paths_1.validateConnection)(connection);
+            (0, connection_paths_1.validateConnection)(connection, app.vault.configDir);
             if (!connection.title.trim())
                 throw new Error('Connection name is required.');
             actions.validateConnection(connection);
@@ -1549,7 +1551,7 @@ function createRegionalSettings(app, readFormats) {
         const preview = root.createDiv({
             cls: 'nts-format-preview'
         });
-        preview.createEl('span', {
+        preview.createSpan({
             text: 'Formatting preview',
             cls: 'nts-preview-label'
         });
@@ -1610,7 +1612,7 @@ function createRegionalSettings(app, readFormats) {
         try {
             state.previewEl.setText((0, format_options_1.previewFormat)(getFormats().locale, getFormats().currency));
         }
-        catch (_) {
+        catch {
             state.previewEl.setText('Invalid locale or currency');
         }
     }
@@ -1620,7 +1622,7 @@ function createRegionalSettings(app, readFormats) {
         async load(path) {
             state.formatDraft ??= await readFormats(path);
         },
-        reset() {
+        reset: () => {
             state.formatDraft = null;
         },
         validate() {
@@ -1634,50 +1636,65 @@ function createRegionalSettings(app, readFormats) {
 "features/connections/settings-tab.js": function(module, exports, require) {
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getConnectionSettingDefinitions = getConnectionSettingDefinitions;
 exports.renderConnectionSettings = renderConnectionSettings;
 const obsidian_1 = require("obsidian");
 const confirm_modal_1 = require("../../infrastructure/obsidian/ui/confirm-modal");
 const connection_modal_1 = require("./connection-modal");
+const GENERATED_NOTE_WARNING = 'The generated note can be overwritten. Keep manual edits in the template, not the generated note.';
+function getConnectionSettingDefinitions(app, actions, refresh) {
+    return [
+        {
+            name: 'Document connections',
+            desc: 'Each connection links portable JSON data, a Markdown template, and an output note. No fixed folder or file names.',
+            aliases: ['Add connection', 'JSON', 'Markdown template'],
+            render: (row) => {
+                row.addButton(button => button
+                    .setButtonText('Add connection')
+                    .setCta()
+                    .onClick(() => (0, connection_modal_1.createConnectionModal)(app, actions).open()));
+            }
+        },
+        ...actions.listConnections().map(connection => ({
+            name: connection.title,
+            desc: `${connection.data_path} → ${connection.output_path}`,
+            aliases: ['Automatic updates', 'Edit connection', 'Remove connection', connection.template_path],
+            render: (row) => renderConnectionControls(row, app, actions, connection, refresh)
+        })),
+        {
+            name: '',
+            desc: GENERATED_NOTE_WARNING,
+            render: (row) => {
+                row.setDesc(GENERATED_NOTE_WARNING);
+            }
+        }
+    ];
+}
 function renderConnectionSettings(root, app, actions) {
     root.empty();
-    renderHeader();
-    for (const connection of actions.listConnections()) {
-        renderConnectionRow(connection);
+    const refresh = () => renderConnectionSettings(root, app, actions);
+    for (const definition of getConnectionSettingDefinitions(app, actions, refresh)) {
+        const row = new obsidian_1.Setting(root).setName(definition.name).setDesc(definition.desc);
+        definition.render?.(row);
     }
-    root.createEl('p', {
-        text: 'The generated note can be overwritten. Keep manual edits in the template, not the generated note.',
-        cls: 'setting-item-description'
-    });
-    function renderHeader() {
-        new obsidian_1.Setting(root)
-            .setName('Document connections')
-            .setDesc('Each connection links portable JSON data, a Markdown template, and an output note. No fixed folder or file names.')
-            .addButton(button => button.setButtonText('Add connection').setCta().onClick(addConnection));
+}
+function renderConnectionControls(row, app, actions, connection, refresh) {
+    row.addToggle(control => control.setValue(connection.enabled).onChange(setAutomaticSync));
+    row.addExtraButton(button => button.setIcon('pencil').setTooltip('Edit connection').onClick(editConnection));
+    row.addExtraButton(button => button.setIcon('trash').setTooltip('Remove connection (files are not deleted)').onClick(confirmRemoval));
+    async function setAutomaticSync(enabled) {
+        await actions.saveConnection({ ...connection, enabled });
     }
-    function addConnection() {
-        (0, connection_modal_1.createConnectionModal)(app, actions).open();
+    function editConnection() {
+        (0, connection_modal_1.createConnectionModal)(app, actions, connection).open();
     }
-    function renderConnectionRow(connection) {
-        const row = new obsidian_1.Setting(root)
-            .setName(connection.title)
-            .setDesc(`${connection.data_path} → ${connection.output_path}`);
-        row.addToggle(control => control.setValue(connection.enabled).onChange(setAutomaticSync));
-        row.addExtraButton(button => button.setIcon('pencil').setTooltip('Edit connection').onClick(editConnection));
-        row.addExtraButton(button => button.setIcon('trash').setTooltip('Remove connection (files are not deleted)').onClick(confirmRemoval));
-        async function setAutomaticSync(enabled) {
-            await actions.saveConnection({ ...connection, enabled });
-        }
-        function editConnection() {
-            (0, connection_modal_1.createConnectionModal)(app, actions, connection).open();
-        }
-        function confirmRemoval() {
-            const description = `Remove '${connection.title}'? The data, template and output files will be kept.`;
-            (0, confirm_modal_1.createConfirmModal)(app, 'Remove connection?', description, 'Remove', removeConnection).open();
-        }
-        async function removeConnection() {
-            await actions.removeConnection(connection.id);
-            renderConnectionSettings(root, app, actions);
-        }
+    function confirmRemoval() {
+        const description = `Remove '${connection.title}'? The data, template and output files will be kept.`;
+        (0, confirm_modal_1.createConfirmModal)(app, 'Remove connection?', description, 'Remove', removeConnection).open();
+    }
+    async function removeConnection() {
+        await actions.removeConnection(connection.id);
+        refresh();
     }
 }
 
@@ -1941,7 +1958,7 @@ function createEditorNavigation(options) {
         const reportActions = page.createDiv({
             cls: 'nts-report-actions'
         });
-        const syncStatusEl = reportActions.createEl('span', {
+        const syncStatusEl = reportActions.createSpan({
             cls: 'nts-sync-status',
             text: 'Checking report…'
         });
@@ -2158,7 +2175,9 @@ function createFieldModal(app, actions, options) {
                 draft.section = value;
             }));
             new obsidian_1.Setting(modal.contentEl).setName('Type').addDropdown(dropdown => {
-                ['number', 'text', 'date', 'boolean'].forEach(item => dropdown.addOption(item, item));
+                ['number', 'text', 'date', 'boolean'].forEach(item => {
+                    dropdown.addOption(item, item);
+                });
                 dropdown
                     .setValue(draft.type)
                     .setDisabled(Boolean(field))
@@ -2175,7 +2194,9 @@ function createFieldModal(app, actions, options) {
                 draft.value = draft.type === 'number' ? Number(value) : draft.type === 'boolean' ? value === 'true' : value;
             }));
         new obsidian_1.Setting(modal.contentEl).setName('Color role').addDropdown(dropdown => {
-            ['none', 'income', 'expense', 'investment', 'pending', 'auto'].forEach(item => dropdown.addOption(item, item));
+            ['none', 'income', 'expense', 'investment', 'pending', 'auto'].forEach(item => {
+                dropdown.addOption(item, item);
+            });
             dropdown.setValue(draft.tone || 'none').onChange(value => {
                 if ((0, data_model_1.isColorRole)(value))
                     draft.tone = value;
@@ -2308,10 +2329,19 @@ const obsidian_1 = require("obsidian");
 const data_editor_view_1 = require("./data-editor-view");
 function createEditorWorkspace(app) {
     const views = () => app.workspace.getLeavesOfType(data_editor_view_1.VIEW_TYPE).map(leaf => leaf.view);
+    async function reveal(leaf) {
+        if ((0, obsidian_1.requireApiVersion)('1.7.2')) {
+            await app.workspace.revealLeaf(leaf);
+        }
+        else {
+            app.workspace.rightSplit.expand();
+            app.workspace.setActiveLeaf(leaf, { focus: true });
+        }
+    }
     async function open() {
         const existing = app.workspace.getLeavesOfType(data_editor_view_1.VIEW_TYPE)[0];
         if (existing) {
-            await app.workspace.revealLeaf(existing);
+            await reveal(existing);
             return;
         }
         const leaf = app.workspace.getRightLeaf(false);
@@ -2320,7 +2350,7 @@ function createEditorWorkspace(app) {
             return;
         }
         await leaf.setViewState({ type: data_editor_view_1.VIEW_TYPE, active: true });
-        await app.workspace.revealLeaf(leaf);
+        await reveal(leaf);
     }
     function close() {
         app.workspace.detachLeavesOfType(data_editor_view_1.VIEW_TYPE);
@@ -2410,6 +2440,14 @@ function registerPlugin(plugin, actions, editor) {
         }
     });
     plugin.addSettingTab(new (class extends obsidian_1.PluginSettingTab {
+        getSettingDefinitions() {
+            return (0, settings_tab_1.getConnectionSettingDefinitions)(app, actions, () => {
+                if ((0, obsidian_1.requireApiVersion)('1.13.0'))
+                    this.update();
+                else
+                    this.display();
+            });
+        }
         display() {
             (0, settings_tab_1.renderConnectionSettings)(this.containerEl, app, actions);
         }
@@ -2473,7 +2511,7 @@ function createConfirmModal(app, title, description, confirmText, action) {
             .addButton(button => button.setButtonText('Cancel').onClick(() => modal.close()))
             .addButton(button => {
             button.setButtonText(confirmText);
-            if (typeof button.setDestructive === 'function') {
+            if ((0, obsidian_1.requireApiVersion)('1.13.0')) {
                 button.setDestructive().setCta();
             }
             else {
@@ -2583,7 +2621,7 @@ function randomId() {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.normalizePath = normalizePath;
 exports.relocatePath = relocatePath;
-function normalizePath(input) {
+function normalizePath(input, configDir) {
     if (typeof input !== 'string')
         throw new Error('File path is required.');
     const path = input.trim().replace(/\\/g, '/').replace(/\/+/g, '/');
@@ -2593,8 +2631,8 @@ function normalizePath(input) {
     if (path.split('/').some(part => part === '.' || part === '..' || !part)) {
         throw new Error('Path traversal is not allowed.');
     }
-    if (path.split('/')[0] === '.obsidian') {
-        throw new Error('Do not store document files in the .obsidian configuration folder.');
+    if (configDir && (path === configDir || path.startsWith(configDir + '/'))) {
+        throw new Error('Do not store document files in the vault configuration folder.');
     }
     return path;
 }

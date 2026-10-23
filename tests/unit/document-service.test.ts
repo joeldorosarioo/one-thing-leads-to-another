@@ -35,6 +35,7 @@ function createSource() {
   });
 
   const vault: VaultPort = {
+    configDir: '.obsidian',
     getAbstractFileByPath: path => ({ path, extension: 'json' }),
 
     async read() {

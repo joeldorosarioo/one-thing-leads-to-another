@@ -33,7 +33,9 @@ class PluginStub {
 
   addRibbonIcon() {}
   addCommand() {}
-  addSettingTab() {}
+  addSettingTab(tab) {
+    this.settingTab = tab;
+  }
   registerEvent() {}
 }
 
@@ -56,6 +58,7 @@ function createVault(files) {
   const events = new Map();
 
   const vault = {
+    configDir: '.obsidian',
     content,
     events,
 
@@ -98,7 +101,7 @@ function createVault(files) {
   return vault;
 }
 
-function loadPlugin() {
+function loadPlugin(apiVersion) {
   const exported = {
     exports: {}
   };
@@ -109,6 +112,7 @@ function loadPlugin() {
     console,
     setTimeout,
     clearTimeout,
+    window: { setTimeout, clearTimeout },
     Intl,
 
     require(name) {
@@ -121,7 +125,8 @@ function loadPlugin() {
           Modal,
           PluginSettingTab,
           ItemView,
-          Setting: class {}
+          Setting: class {},
+          requireApiVersion: version => version.localeCompare(apiVersion, undefined, { numeric: true }) <= 0
         };
 
       throw new Error(name);
@@ -136,8 +141,8 @@ function readExample(filename) {
   return fs.readFileSync(path.join(example, filename), 'utf8');
 }
 
-function createPlugin({ vault, workspace = {} }) {
-  const Plugin = loadPlugin();
+function createPlugin({ vault, workspace = {}, apiVersion = '1.14.4' }) {
+  const Plugin = loadPlugin(apiVersion);
 
   return new Plugin({
     vault,

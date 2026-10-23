@@ -23,7 +23,7 @@ export async function ensureFolders(vault: VaultPort, path: string): Promise<voi
 }
 
 export async function createStarterFiles(vault: VaultPort, connection: ConnectionPaths): Promise<void> {
-  validateConnection(connection);
+  validateConnection(connection, vault.configDir);
 
   if (!vault.getAbstractFileByPath(connection.data_path)) {
     await ensureFolders(vault, connection.data_path);
@@ -41,7 +41,7 @@ export async function createStarterFiles(vault: VaultPort, connection: Connectio
 }
 
 export async function inspectDocument(vault: VaultPort, connection: ConnectionPaths): Promise<DocumentInspection> {
-  validateConnection(connection);
+  validateConnection(connection, vault.configDir);
 
   const source = vault.getAbstractFileByPath(connection.data_path);
   const template = vault.getAbstractFileByPath(connection.template_path);

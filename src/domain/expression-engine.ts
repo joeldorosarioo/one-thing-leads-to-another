@@ -9,7 +9,7 @@ function computeValues(input: Record<string, number>, formulas: Record<string, s
   if (!formulas || typeof formulas !== 'object' || Array.isArray(formulas))
     throw new Error('"derived" must be a JSON object.');
 
-  const result: Record<string, number> = Object.assign(Object.create(null), input);
+  const result = Object.assign(Object.create(null) as Record<string, number>, input);
   const inProgress = new Set<string>();
 
   function resolve(key: string): number {

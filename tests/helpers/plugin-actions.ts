@@ -35,6 +35,7 @@ export function createActions(options: { existingOutput?: string; legacyApproval
   const saved: PluginSettings[] = [];
 
   const vault: VaultPort = {
+    configDir: '.obsidian',
     getAbstractFileByPath: path => (files.has(path) ? { path, extension: path.split('.').pop() } : null),
 
     async read(file) {
