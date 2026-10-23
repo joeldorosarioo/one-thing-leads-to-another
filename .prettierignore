@@ -1,0 +1,5 @@
+node_modules/
+.build/
+main.js
+pnpm-lock.yaml
+.rebuild-checkpoints/
