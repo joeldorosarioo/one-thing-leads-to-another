@@ -51,13 +51,25 @@ Add dependencies only when they solve a clear need. Keep private vault data, fin
 
 1. Review the author and version in `manifest.json`, along with `LICENSE`, `README.md` and the example data. The release tag must match the version in both `manifest.json` and `package.json`.
 2. Confirm that `pnpm run check` and CI pass. Test in a disposable Obsidian vault, including an upgrade from v0.4.x and a generated note with manual edits.
-3. Tag and push the release. For version 0.5.1:
+3. Tag and push the release. For version 0.5.3:
 
 ```sh
-git tag 0.5.1
-git push origin 0.5.1
+git tag 0.5.3
+git push origin 0.5.3
 ```
 
-GitHub Actions creates a draft release containing `main.js`, `manifest.json` and `styles.css`. Inspect and test those files, then publish the release so Obsidian can download it.
+GitHub Actions builds and tests the tagged source, generates artifact attestations for `main.js`, `manifest.json` and `styles.css`, and verifies them against the release workflow, tag and commit. It then creates a draft release containing those files. Inspect and test them, then publish the release so Obsidian can download it.
+
+After downloading the release files, verify their build provenance with the GitHub CLI:
+
+```sh
+for artifact in main.js manifest.json styles.css; do
+  gh attestation verify "$artifact" --repo joeldorosarioo/one-thing-leads-to-another \
+    --signer-workflow joeldorosarioo/one-thing-leads-to-another/.github/workflows/release.yml \
+    --source-ref refs/tags/0.5.3
+done
+```
+
+Use the tag of the release being verified in `--source-ref`.
 
 For community submission, confirm that `note-template-sync` is available and follow the official [plugin submission guide](https://docs.obsidian.md/Plugins/Releasing/Submit%20your%20plugin). Address review feedback and publish an updated release if needed.

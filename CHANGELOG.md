@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.3
+
+- Added GitHub artifact attestations for `main.js`, `manifest.json` and `styles.css` so users can verify their build provenance.
+- Required attestation verification against the release workflow, tag and source commit before creating a release.
+
 ## 0.5.2
 
 - Fixed sidebar and confirmation-button API compatibility while keeping support for Obsidian 1.5.0.
