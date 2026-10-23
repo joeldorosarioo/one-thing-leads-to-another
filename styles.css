@@ -1,0 +1,289 @@
+.nts-editor {
+  box-sizing: border-box;
+  padding: 12px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.nts-editor .nts-page {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.nts-editor .nts-heading {
+  display: flex;
+  align-items: start;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.nts-editor .nts-heading h2 {
+  margin: 0;
+  font-size: var(--h3-size);
+}
+
+.nts-editor .nts-intro {
+  min-width: 0;
+  width: 100%;
+}
+
+.nts-editor .nts-intro p {
+  color: var(--text-muted);
+  margin: 4px 0 0;
+  font-size: var(--font-small);
+}
+
+.nts-editor .nts-heading-actions > .setting-item {
+  border-top: 0;
+  padding: 0;
+}
+
+.nts-editor .nts-toolbar {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  padding: 8px 12px;
+  margin-bottom: 14px;
+}
+
+.nts-editor .nts-toolbar > .setting-item {
+  border-top: 0;
+  padding: 0;
+  gap: 8px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.nts-editor .nts-toolbar .setting-item-info {
+  min-width: 0;
+  width: 100%;
+}
+
+.nts-editor .nts-toolbar .setting-item-control {
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.nts-editor .nts-toolbar select {
+  min-width: 0;
+  max-width: 100%;
+  flex: 1 1 auto;
+}
+
+.nts-editor .nts-report-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: -4px 0 16px;
+}
+
+.nts-editor .nts-report-actions > .setting-item {
+  padding: 0;
+  border: 0;
+  flex-shrink: 0;
+}
+
+.nts-editor .nts-sync-status {
+  margin: 0;
+  font-size: var(--font-smallest);
+  color: var(--text-muted);
+}
+
+.nts-editor .nts-sync-status.nts-sync-pending {
+  color: var(--text-accent);
+}
+
+.nts-connection-modal .setting-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.nts-connection-modal .setting-item-info {
+  min-width: 160px;
+  flex: 1 1 170px;
+}
+
+.nts-connection-modal .setting-item-control {
+  min-width: 0;
+  flex: 1 1 220px;
+}
+
+.nts-connection-modal .setting-item-control input {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.nts-connection-modal .setting-item-control select {
+  min-width: 0;
+  flex: 1 1 auto;
+  max-width: 100%;
+}
+
+.nts-connection-modal .nts-settings-heading {
+  font-size: var(--font-ui-medium);
+  margin: 20px 0 8px;
+}
+
+.nts-connection-modal .nts-format-preview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 12px 0 8px;
+  padding: 12px;
+  background: var(--background-secondary);
+  border-radius: var(--radius-m);
+}
+
+.nts-connection-modal .nts-preview-label {
+  color: var(--text-muted);
+  font-size: var(--font-small);
+}
+
+.nts-connection-modal .nts-format-preview strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.nts-editor .nts-search {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 18px 0 4px;
+  padding: 9px 12px;
+}
+
+.nts-editor .nts-group {
+  margin-top: 16px;
+}
+
+.nts-editor .nts-group > summary {
+  cursor: pointer;
+  font-size: var(--h4-size);
+  font-weight: var(--font-semibold);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--background-modifier-border);
+  overflow-wrap: anywhere;
+}
+
+.nts-editor .nts-field-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  gap: 10px;
+  padding: 12px 0 4px;
+}
+
+.nts-editor .nts-field {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  min-width: 0;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: var(--background-primary);
+}
+
+.nts-editor .nts-field .setting-item-info,
+.nts-editor .nts-field .setting-item-control {
+  flex: 0 1 auto;
+  width: 100%;
+  min-width: 0;
+}
+
+.nts-editor .nts-field .setting-item-name {
+  overflow-wrap: anywhere;
+  font-size: var(--font-ui-medium);
+  font-weight: var(--font-medium);
+  line-height: 1.45;
+}
+
+.nts-editor .nts-field .setting-item-control {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+}
+
+.nts-editor .nts-field .setting-item-control > .setting-editor-extra-setting-button {
+  flex-shrink: 0;
+}
+
+.nts-editor .nts-field .setting-item-control > input,
+.nts-editor .nts-field .setting-item-control .text-component,
+.nts-editor .nts-field .setting-item-control .text-component input {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  flex: 1 1 auto;
+}
+
+.nts-editor .nts-formula input:disabled {
+  color: var(--text-normal);
+  opacity: 0.75;
+}
+
+.nts-editor .nts-help {
+  color: var(--text-muted);
+  font-size: var(--font-small);
+}
+
+.nts-editor .nts-warning {
+  color: var(--text-error);
+}
+
+.nts-editor [hidden] {
+  display: none !important;
+}
+
+@media (max-width: 500px) {
+  .nts-editor {
+    padding: 12px;
+  }
+
+  .nts-editor .nts-toolbar > .setting-item {
+    flex-wrap: wrap;
+  }
+
+  .nts-editor .nts-toolbar .setting-item-control {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .nts-editor .nts-toolbar select {
+    flex: 1 1 auto;
+  }
+}
+
+.nts-income {
+  color: var(--color-green);
+}
+
+.nts-expense {
+  color: var(--color-red);
+}
+
+.nts-investment {
+  color: var(--color-blue);
+}
+
+.nts-pending {
+  color: var(--color-orange);
+}
+
+.nts-success {
+  color: var(--color-green);
+}

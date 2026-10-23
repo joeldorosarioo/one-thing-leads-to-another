@@ -6,11 +6,13 @@
   "license": "MIT",
   "packageManager": "pnpm@12.10.1",
   "scripts": {
-    "typecheck": "tsc --noEmit -p tsconfig.json \u0026\u0026 tsc --noEmit -p tsconfig.test.json",
+    "build": "node scripts/build-bundle.cjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.test.json",
+    "test:regression": "npm run build && node --test tests/*.test.js",
     "test:unit": "vitest run",
-    "test": "npm run test:unit",
-    "check": "npm run typecheck \u0026\u0026 npm run test:unit \u0026\u0026 npm run lint \u0026\u0026 npm run format:check",
-    "lint": "eslint src tests *.cjs *.ts",
+    "test": "npm run test:unit && npm run test:regression",
+    "check": "npm run typecheck && npm run build && npm run test:unit && node --test tests/*.test.js && node --check main.js && npm run lint && npm run format:check",
+    "lint": "eslint src tests scripts *.cjs *.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

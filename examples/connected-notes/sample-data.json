@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "locale": "en-US",
+  "currency": "USD",
+
+  "fields": [
+    {
+      "key": "note_title",
+      "label": "Note title",
+      "section": "Overview",
+      "type": "text",
+      "tone": "none",
+      "value": "My connected notes"
+    },
+    {
+      "key": "current_focus",
+      "label": "Current focus",
+      "section": "Overview",
+      "type": "text",
+      "tone": "none",
+      "value": "Keeping my notes up to date"
+    },
+    {
+      "key": "next_step",
+      "label": "Next step",
+      "section": "Overview",
+      "type": "text",
+      "tone": "none",
+      "value": "Review the generated summary"
+    },
+    {
+      "key": "tasks_total",
+      "label": "Tasks planned",
+      "section": "Progress",
+      "type": "number",
+      "tone": "none",
+      "value": 5
+    },
+    {
+      "key": "tasks_done",
+      "label": "Tasks completed",
+      "section": "Progress",
+      "type": "number",
+      "tone": "none",
+      "value": 2
+    }
+  ],
+
+  "formulas": [
+    {
+      "key": "tasks_remaining",
+      "label": "Tasks remaining",
+      "expression": "max(0, tasks_total - tasks_done)",
+      "tone": "pending"
+    }
+  ]
+}
