@@ -6,8 +6,11 @@
   "license": "MIT",
   "packageManager": "pnpm@12.10.1",
   "scripts": {
-    "check": "npm run lint \u0026\u0026 npm run format:check",
-    "lint": "eslint *.cjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json \u0026\u0026 tsc --noEmit -p tsconfig.test.json",
+    "test:unit": "vitest run",
+    "test": "npm run test:unit",
+    "check": "npm run typecheck \u0026\u0026 npm run test:unit \u0026\u0026 npm run lint \u0026\u0026 npm run format:check",
+    "lint": "eslint src tests *.cjs *.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
