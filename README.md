@@ -12,6 +12,10 @@ Putting editable controls inside the report made it harder to read. Repeating th
 
 The same workflow also works for project notes, recurring summaries, goal trackers and other notes built from structured values.
 
+## Why the repository name?
+
+`one-thing-leads-to-another` is a nod to ["One Thing Leads to Another" by The Fixx](https://www.youtube.com/watch?v=JHYIGy1dyd8). It also fits the plugin's workflow: change one value, and the calculations and generated note follow.
+
 ## Features
 
 - A visual editor in the right sidebar, with searchable fields and collapsible sections.
