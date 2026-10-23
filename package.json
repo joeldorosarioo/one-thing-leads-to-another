@@ -1,6 +1,6 @@
 {
   "name": "note-template-sync",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "private": true,
   "description": "Visual data editor and portable Markdown template generation for Obsidian",
   "license": "MIT",

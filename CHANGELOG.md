@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.4
+
+- Removed `!important` from the field-filtering styles and increased selector specificity to keep hidden fields and sections out of view.
+- Replaced a deprecated settings refresh call while retaining the settings screen required by Obsidian versions before 1.13.0.
+- Added lint checks for deprecated APIs and documented the file picker's local vault access.
+
 ## 0.5.3
 
 - Added GitHub artifact attestations for `main.js`, `manifest.json` and `styles.css` so users can verify their build provenance.

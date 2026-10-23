@@ -2445,7 +2445,7 @@ function registerPlugin(plugin, actions, editor) {
                 if ((0, obsidian_1.requireApiVersion)('1.13.0'))
                     this.update();
                 else
-                    this.display();
+                    (0, settings_tab_1.renderConnectionSettings)(this.containerEl, app, actions);
             });
         }
         display() {

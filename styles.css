@@ -245,8 +245,8 @@
   color: var(--text-error);
 }
 
-.nts-editor [hidden] {
-  display: none !important;
+.nts-editor .nts-page [hidden] {
+  display: none;
 }
 
 @media (max-width: 500px) {

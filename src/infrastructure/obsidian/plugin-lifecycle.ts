@@ -38,7 +38,7 @@ export function registerPlugin(
       getSettingDefinitions(): SettingDefinitionItem[] {
         return getConnectionSettingDefinitions(app, actions, () => {
           if (requireApiVersion('1.13.0')) this.update();
-          else this.display();
+          else renderConnectionSettings(this.containerEl, app, actions);
         });
       }
 

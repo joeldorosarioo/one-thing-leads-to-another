@@ -2,7 +2,7 @@
 
 Edit structured data in Obsidian's right sidebar and generate a Markdown note from a reusable template. Each connection links a JSON data source, a Markdown template and a generated note. The files stay in your vault, and the generated note contains ordinary Markdown. No accounts or external services are required.
 
-**Version:** 0.5.3 | **Status:** release candidate, not yet community-approved | **Platform:** desktop preview.
+**Version:** 0.5.4 | **Status:** release candidate, not yet community-approved | **Platform:** desktop preview.
 
 ## Why this exists
 
@@ -38,6 +38,8 @@ The same workflow also works for project notes, recurring summaries, goal tracke
 6. Add fields in the editor and reference them in the template. Open the generated note alongside the editor to see the result.
 
 Use the advanced **Use existing JSON** option to select a portable data file you already have.
+
+The file picker lists file paths from your vault so you can choose an existing JSON source or Markdown file. Source and template files are read locally; saving values updates the source JSON, and synchronization writes the generated note. The plugin does not send vault data to external services.
 
 ### How syncing works
 

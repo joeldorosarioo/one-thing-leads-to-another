@@ -107,6 +107,7 @@ module.exports = defineConfig(
       '@typescript-eslint/unbound-method': 'error',
       '@typescript-eslint/no-unsafe-assignment': 'error',
       '@typescript-eslint/no-misused-promises': 'error',
+      '@typescript-eslint/no-deprecated': 'error',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', caughtErrors: 'all' }],
       'obsidianmd/no-unsupported-api': 'error',
       'obsidianmd/prefer-window-timers': 'error',
